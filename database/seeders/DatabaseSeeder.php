@@ -8,13 +8,17 @@ use App\Models\Upvote;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database with a realistic demo data set.
      *
-     * All accounts use the password: "password".
+     * All accounts use the password: "password". This seeder intentionally
+     * avoids model factories / Faker so it runs on a production image where
+     * dev dependencies are not installed.
      */
     public function run(): void
     {
@@ -23,39 +27,51 @@ class DatabaseSeeder extends Seeder
         DB::transaction(fn () => $this->seed());
     }
 
+    /**
+     * Create a user without relying on the factory (no Faker in production).
+     */
+    private function makeUser(string $name, string $email, string $role = 'normal_user', bool $verifiedDoctor = false): User
+    {
+        return User::create([
+            'name' => $name,
+            'email' => $email,
+            'email_verified_at' => now(),
+            'role' => $role,
+            'doctor_certificate' => $role === 'doctor'
+                ? 'https://placehold.co/600x400?text=Doctor+Certificate'
+                : null,
+            'doctor_verified_at' => $role === 'doctor' && $verifiedDoctor ? now() : null,
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
+        ]);
+    }
+
     private function seed(): void
     {
         // --- Known demo accounts -------------------------------------------------
-        $alice = User::factory()->create([
-            'name' => 'Alice Putri',
-            'email' => 'alice@example.com',
-        ]);
+        $alice = $this->makeUser('Alice Putri', 'alice@example.com');
+        $citra = $this->makeUser('Citra Dewi', 'citra@example.com');
+        $drBudi = $this->makeUser('dr. Budi Santoso', 'budi@example.com', 'doctor', verifiedDoctor: true);
 
-        $citra = User::factory()->create([
-            'name' => 'Citra Dewi',
-            'email' => 'citra@example.com',
-        ]);
-
-        $drBudi = User::factory()->doctor()->create([
-            'name' => 'dr. Budi Santoso',
-            'email' => 'budi@example.com',
-        ]);
-
-        User::factory()->admin()->create([
-            'name' => 'Site Admin',
-            'email' => 'admin@example.com',
-        ]);
+        $this->makeUser('Site Admin', 'admin@example.com', 'admin');
 
         // A doctor application still waiting for admin review.
-        User::factory()->pendingDoctor()->create([
-            'name' => 'dr. Dewi Lestari',
-            'email' => 'dewi@example.com',
-        ]);
+        $this->makeUser('dr. Dewi Lestari', 'dewi@example.com', 'doctor');
 
-        // --- Extra random users ------------------------------------------------
-        $members = User::factory(8)->create();
-        $doctors = User::factory(3)->doctor()->create();
-        User::factory(2)->pendingDoctor()->create();
+        // --- Extra users -----------------------------------------------------
+        $memberNames = ['Rani Kusuma', 'Bagus Wijaya', 'Sinta Hapsari', 'Doni Prasetyo', 'Maya Anggraini', 'Yoga Mahendra', 'Lia Rahmawati', 'Fajar Nugroho'];
+        $members = collect($memberNames)->map(
+            fn (string $name) => $this->makeUser($name, Str::slug($name, '.').'@example.com')
+        );
+
+        $doctorNames = ['dr. Sari Wibowo', 'dr. Hendra Kurniawan', 'dr. Putri Maharani'];
+        $doctors = collect($doctorNames)->map(
+            fn (string $name) => $this->makeUser($name, Str::slug($name, '.').'@example.com', 'doctor', verifiedDoctor: true)
+        );
+
+        // Two more pending applications.
+        $this->makeUser('dr. Andi Saputra', 'dr.andi.saputra@example.com', 'doctor');
+        $this->makeUser('dr. Nina Kartika', 'dr.nina.kartika@example.com', 'doctor');
 
         $everyone = collect([$alice, $citra, $drBudi])
             ->concat($members)
