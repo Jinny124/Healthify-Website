@@ -1,0 +1,8 @@
+# Ignore node modules
+node_modules
+
+# Ignore vendor directory
+vendor
+
+# Ignore Git repository directories and files
+.git

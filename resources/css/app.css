@@ -1,0 +1,22 @@
+@import "node_modules/bootstrap-icons/font/bootstrap-icons.css";
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Background of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0077b6; /* Color of the scrollbar */
+    border-radius: 5px; /* Rounded corners */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00b4d8; /* Color on hover */
+}
