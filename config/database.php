@@ -57,9 +57,13 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => [
-                PDO::MYSQL_ATTR_SSL_CA => base_path('storage/ssl/DigiCertGlobalRootCA.crt.pem'),
-            ],
+            // Only negotiate TLS when a CA bundle is configured (e.g. Azure
+            // MySQL). Hosts like Railway or a local MySQL leave this unset.
+            'options' => array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA')
+                    ? base_path(env('MYSQL_ATTR_SSL_CA'))
+                    : null,
+            ]),
         ],
 
         'mariadb' => [
