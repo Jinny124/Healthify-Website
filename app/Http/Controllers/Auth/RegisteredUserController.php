@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -28,39 +28,41 @@ class RegisteredUserController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): RedirectResponse
-{
-    $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        'role' => ['required', 'in:normal_user,doctor'],
-        'doctor_certificate' => ['nullable', 'file', 'mimes:jpeg,png,pdf', 'max:2048'],
-    ]);
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => ['required', 'in:normal_user,doctor'],
+            'doctor_certificate' => ['nullable', 'file', 'mimes:jpeg,png,pdf', 'max:2048'],
+        ]);
 
-    $doctorCertificatePath = null;
+        $doctorCertificatePath = null;
 
-    if ($request->role === 'doctor' && $request->hasFile('doctor_certificate')) {
+        if ($request->role === 'doctor' && $request->hasFile('doctor_certificate')) {
+            // Use Azure when it is configured, otherwise fall back to the local
+            // public disk so the app works without cloud credentials.
+            $disk = config('filesystems.disks.azure.key') ? 'azure' : 'public';
 
-        $filePath = $request->file('doctor_certificate')->store(
-            '', 
-            'azure' 
-        );
+            $filePath = $request->file('doctor_certificate')->store('certificates', $disk);
 
+            $doctorCertificatePath = $disk === 'azure'
+                ? config('filesystems.disks.azure.url').'/'.$filePath
+                : Storage::disk('public')->url($filePath);
+        }
 
-        $doctorCertificatePath = config('filesystems.disks.azure.url') . '/' . $filePath;
-    }
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+            'password' => Hash::make($request->password),
+            'doctor_certificate' => $doctorCertificatePath,
+            // Doctors start unverified; an admin approves them before the badge shows.
+            'doctor_verified_at' => null,
+        ]);
 
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'role' => $request->role,
-        'password' => Hash::make($request->password),
-        'doctor_certificate' => $doctorCertificatePath,
-    ]);
-
-    Auth::login($user);
+        Auth::login($user);
 
         return redirect(route('threads.search', absolute: false));
-}
-
+    }
 }

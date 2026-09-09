@@ -21,8 +21,10 @@
                         @endif
 
                         <h2 class="h4 text-dark d-flex align-items-center mt-2">
-                            @if(Auth::user()->role == 'doctor')
+                            @if(Auth::user()->isDoctor())
                             <span class="badge bg-primary font-weight-normal me-2">@lang('messages.dokter')</span>
+                            @elseif(Auth::user()->isPendingDoctor())
+                            <span class="badge bg-warning text-dark me-2">@lang('messages.dokter') (pending)</span>
                             @endif
                             {{Auth::user()->name}}
                         </h2>

@@ -30,19 +30,43 @@ class UserFactory extends Factory
             'role' => 'normal_user',
             'profile_photo_path' => null,
             'doctor_certificate' => null,
+            'doctor_verified_at' => null,
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ];
     }
 
     /**
-     * Indicate that the user is a verified doctor.
+     * Indicate that the user is a doctor whose certificate has been approved.
      */
     public function doctor(): static
     {
         return $this->state(fn (array $attributes) => [
             'role' => 'doctor',
             'doctor_certificate' => 'https://placehold.co/600x400?text=Doctor+Certificate',
+            'doctor_verified_at' => now(),
+        ]);
+    }
+
+    /**
+     * Indicate that the user registered as a doctor but is awaiting approval.
+     */
+    public function pendingDoctor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'doctor',
+            'doctor_certificate' => 'https://placehold.co/600x400?text=Doctor+Certificate',
+            'doctor_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a site administrator.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'admin',
         ]);
     }
 

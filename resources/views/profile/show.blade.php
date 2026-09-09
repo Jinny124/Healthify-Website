@@ -13,8 +13,10 @@
                     @endif
                     <div class="py-2 d-flex align-items-center">
                         <h4 class="me-2 mb-0">{{ $user->name }}</h4>
-                        @if($user->role == 'doctor')
+                        @if($user->isDoctor())
                         <span class="badge bg-primary font-weight-normal ms-2">@lang('messages.dokter')</span>
+                        @elseif($user->isPendingDoctor() && Auth::id() === $user->id)
+                        <span class="badge bg-warning text-dark ms-2">@lang('messages.dokter') (pending)</span>
                         @endif
                     </div>
                     <p>@lang('messages.joined') {{ $user->created_at->diffForHumans() }}</p>

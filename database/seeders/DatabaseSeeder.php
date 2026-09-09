@@ -33,9 +33,21 @@ class DatabaseSeeder extends Seeder
             'email' => 'budi@example.com',
         ]);
 
+        User::factory()->admin()->create([
+            'name' => 'Site Admin',
+            'email' => 'admin@example.com',
+        ]);
+
+        // A doctor application still waiting for admin review.
+        User::factory()->pendingDoctor()->create([
+            'name' => 'dr. Dewi Lestari',
+            'email' => 'dewi@example.com',
+        ]);
+
         // --- Extra random users ------------------------------------------------
         $members = User::factory(8)->create();
         $doctors = User::factory(3)->doctor()->create();
+        User::factory(2)->pendingDoctor()->create();
 
         $everyone = collect([$alice, $citra, $drBudi])
             ->concat($members)
@@ -45,43 +57,43 @@ class DatabaseSeeder extends Seeder
         $topics = [
             [
                 'Tips menjaga tekanan darah tetap stabil',
-                "Belakangan ini tensi saya naik turun. Selain kurangi garam, apa lagi yang bisa dilakukan sehari-hari? Sharing pengalaman dong.",
+                'Belakangan ini tensi saya naik turun. Selain kurangi garam, apa lagi yang bisa dilakukan sehari-hari? Sharing pengalaman dong.',
             ],
             [
                 'Berapa lama waktu tidur ideal untuk orang dewasa?',
-                "Saya biasa tidur jam 1 pagi dan bangun jam 6. Apakah 5 jam cukup kalau kualitasnya bagus, atau tetap kurang?",
+                'Saya biasa tidur jam 1 pagi dan bangun jam 6. Apakah 5 jam cukup kalau kualitasnya bagus, atau tetap kurang?',
             ],
             [
                 'Olahraga ringan yang aman untuk pemula',
-                "Sudah lama tidak olahraga dan berat badan naik. Mau mulai pelan-pelan. Rekomendasi rutinitas 15-20 menit per hari?",
+                'Sudah lama tidak olahraga dan berat badan naik. Mau mulai pelan-pelan. Rekomendasi rutinitas 15-20 menit per hari?',
             ],
             [
                 'Cara mengurangi konsumsi gula tanpa tersiksa',
-                "Setiap sore selalu ingin yang manis. Ada trik mengganti kebiasaan ngemil manis dengan sesuatu yang lebih sehat?",
+                'Setiap sore selalu ingin yang manis. Ada trik mengganti kebiasaan ngemil manis dengan sesuatu yang lebih sehat?',
             ],
             [
                 'Apakah suplemen vitamin D benar-benar perlu?',
-                "Jarang kena matahari karena kerja di dalam ruangan seharian. Perlukah suplemen, atau cukup dari makanan?",
+                'Jarang kena matahari karena kerja di dalam ruangan seharian. Perlukah suplemen, atau cukup dari makanan?',
             ],
             [
                 'Mengelola stres kerja yang berkepanjangan',
-                "Deadline menumpuk dan susah tidur karena kepikiran kerjaan. Teknik apa yang benar-benar membantu buat kalian?",
+                'Deadline menumpuk dan susah tidur karena kepikiran kerjaan. Teknik apa yang benar-benar membantu buat kalian?',
             ],
             [
                 'Nyeri punggung bawah setelah duduk lama',
-                "Kerja remote, duduk 8 jam sehari. Punggung bawah pegal terus. Peregangan atau perubahan posisi seperti apa yang membantu?",
+                'Kerja remote, duduk 8 jam sehari. Punggung bawah pegal terus. Peregangan atau perubahan posisi seperti apa yang membantu?',
             ],
             [
                 'Menjaga daya tahan tubuh saat pergantian musim',
-                "Tiap musim hujan pasti kena batuk pilek. Kebiasaan apa yang bisa mengurangi risiko gampang sakit?",
+                'Tiap musim hujan pasti kena batuk pilek. Kebiasaan apa yang bisa mengurangi risiko gampang sakit?',
             ],
             [
                 'Porsi makan sehat tanpa harus menghitung kalori',
-                "Menghitung kalori bikin capek. Ada pendekatan yang lebih simpel untuk kontrol porsi harian?",
+                'Menghitung kalori bikin capek. Ada pendekatan yang lebih simpel untuk kontrol porsi harian?',
             ],
             [
                 'Kapan sakit kepala perlu diperiksakan ke dokter?',
-                "Sakit kepala tegang beberapa kali seminggu. Kapan ini termasuk wajar dan kapan harus diperiksa lebih lanjut?",
+                'Sakit kepala tegang beberapa kali seminggu. Kapan ini termasuk wajar dan kapan harus diperiksa lebih lanjut?',
             ],
         ];
 

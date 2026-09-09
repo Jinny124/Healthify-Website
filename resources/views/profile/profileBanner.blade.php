@@ -12,7 +12,7 @@
     <div class="d-flex flex-column ms-4">
         <a href="{{ route('profile.show', $object->user) }}" class="font-weight-bold fs-6 text-decoration-none">
             {{ $object->user->name }}
-            @if($object->user->role == 'doctor')
+            @if($object->user->isDoctor())
             <span class="badge bg-primary font-weight-normal">@lang('messages.dokter')</span>
             @endif
         </a>

@@ -21,8 +21,11 @@ available in English, Indonesian, and Japanese.
 - **Threads** — create, browse (latest / popular), full-text search, delete your own
 - **Comments** — threaded replies (one level of nesting), per-user
 - **Voting** — up/down vote on threads and comments; the "popular" feed ranks by score
-- **Roles** — register as a normal member or as a *doctor* (with a certificate upload);
-  doctor posts show a badge
+- **Roles** — register as a normal member or as a *doctor* (with a certificate
+  upload). Doctor applications are **reviewed by an admin**; the "Doctor" badge
+  only appears once approved
+- **Admin panel** — `/admin/doctor-verifications`: approve or reject pending
+  doctor applications
 - **Profiles** — avatar, join date, list of the user's threads and comments
 - **In-place translation** — "Translate" toggles any thread or comment through the
   Azure Translator API and back to the original
@@ -97,14 +100,16 @@ Open http://127.0.0.1:8000.
 
 ## Demo accounts
 
-`php artisan migrate --seed` creates 14 users, 10 threads, ~55 comments, and votes.
+`php artisan migrate --seed` creates ~17 users, 10 threads, ~55 comments, and votes.
 Every account uses the password **`password`**.
 
 | Email | Role |
 | --- | --- |
 | `alice@example.com` | member |
 | `citra@example.com` | member |
-| `budi@example.com` | doctor |
+| `budi@example.com` | verified doctor |
+| `dewi@example.com` | doctor — pending approval |
+| `admin@example.com` | admin (doctor-verification panel) |
 
 ## Localization
 
@@ -151,12 +156,14 @@ values in `.env`.
 
 ## Roadmap
 
-- [ ] Doctor certificates are uploaded but auto-approved — add an admin review step
-- [ ] No admin / moderation role yet
-- [ ] Image uploads are hard-wired to Azure — add a local `public` disk fallback
+- [x] Admin review step for doctor applications (`admin` role + verification panel)
+- [x] Feature tests for threads, comments, votes, and the verification flow
+- [x] Auth guard on write routes (create/delete threads, comment, vote)
+- [ ] Broader moderation: hide/lock threads, ban users, report queue
+- [ ] Thread and profile image uploads are still hard-wired to Azure — only the
+      doctor certificate falls back to the local `public` disk
 - [ ] The Azure Translator key is currently exposed to the browser — move
       translation behind a server-side endpoint
-- [ ] Feature tests only cover the Breeze scaffolding, not threads/comments/votes
 - [ ] Rate limiting on posting and voting
 - [ ] Retire the vendored `public/bootstrap-icons-1.11.3/` copy in favour of the npm package
 - [ ] Consolidate on Bootstrap (the Breeze `dashboard` view still uses Tailwind)

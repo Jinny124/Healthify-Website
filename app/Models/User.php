@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'role',
         'doctor_certificate',
+        'doctor_verified_at',
     ];
 
     /**
@@ -44,7 +45,33 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'doctor_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Site administrator (staff), able to review doctor applications.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * A doctor whose certificate has been approved by an admin.
+     * Only verified doctors get the "Doctor" badge.
+     */
+    public function isDoctor(): bool
+    {
+        return $this->role === 'doctor' && $this->doctor_verified_at !== null;
+    }
+
+    /**
+     * Registered as a doctor but still waiting for admin approval.
+     */
+    public function isPendingDoctor(): bool
+    {
+        return $this->role === 'doctor' && $this->doctor_verified_at === null;
     }
 }

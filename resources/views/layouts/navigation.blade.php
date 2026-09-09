@@ -66,6 +66,14 @@
           @endif
         </div>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
+          @if(Auth::user()->isAdmin())
+          <li>
+            <a class="dropdown-item text-danger fw-bold" href="{{ route('admin.doctors.index') }}">
+              <i class="bi bi-shield-check me-1"></i> Doctor verifications
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          @endif
           <li>
             <a class="dropdown-item text-primary fw-bold" href="{{ route('profile.show', Auth::user()) }}">@lang('messages.profile')</a>
           </li>
