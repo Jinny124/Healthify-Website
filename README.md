@@ -1,66 +1,134 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Healthify
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A health discussion forum where people ask everyday health questions and get
+answers from the community — including verified doctors. Built with Laravel 11.
 
-## About Laravel
+Members post threads, reply with nested comments, and up/down-vote both threads
+and comments. Any post can be machine-translated in place, and the whole UI is
+available in English, Indonesian, and Japanese.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+> Started as a university web-programming project and is being cleaned up into a
+> portfolio piece. See [Roadmap](#roadmap) for what is still in progress.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Screenshots
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Thread list | Thread detail |
+| --- | --- |
+| _add `docs/threads.png`_ | _add `docs/thread-detail.png`_ |
 
-## Learning Laravel
+## Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Threads** — create, browse (latest / popular), full-text search, delete your own
+- **Comments** — threaded replies (one level of nesting), per-user
+- **Voting** — up/down vote on threads and comments; the "popular" feed ranks by score
+- **Roles** — register as a normal member or as a *doctor* (with a certificate upload);
+  doctor posts show a badge
+- **Profiles** — avatar, join date, list of the user's threads and comments
+- **In-place translation** — "Translate" toggles any thread or comment through the
+  Azure Translator API and back to the original
+- **Localization** — English, Indonesian (`id`), Japanese (`jp`); switch from the navbar
+- **Auth** — Laravel Breeze (login, registration, password reset, profile management)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Tech stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Area | Choice |
+| --- | --- |
+| Framework | Laravel 11, PHP 8.2 |
+| Views | Blade |
+| Styling | Bootstrap 5.3, Bootstrap Icons |
+| Build | Vite 5 |
+| Auth scaffolding | Laravel Breeze |
+| Database | MySQL in production, SQLite for local development |
+| File storage | Azure Blob Storage (image uploads) — optional locally |
+| Translation | Azure Translator |
+| Tests | Pest |
 
-## Laravel Sponsors
+## Getting started
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Prerequisites
 
-### Premium Partners
+- PHP 8.2+ with `pdo_sqlite` (and `pdo_mysql` if you use MySQL)
+- Composer 2
+- Node.js 18+ and npm
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Install
 
-## Contributing
+```bash
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Database — SQLite (default, zero config)
 
-## Code of Conduct
+```bash
+# create the database file, then migrate + seed demo data
+# Windows PowerShell: New-Item -ItemType File database/database.sqlite
+touch database/database.sqlite
+php artisan migrate --seed
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Database — MySQL (alternative)
 
-## Security Vulnerabilities
+Create a database, then set these in `.env`:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=healthify
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+```bash
+php artisan migrate --seed
+```
+
+### Run
+
+```bash
+npm run build          # or: npm run dev  (for hot reload)
+php artisan serve
+```
+
+Open http://127.0.0.1:8000.
+
+## Demo accounts
+
+`php artisan migrate --seed` creates 14 users, 10 threads, ~55 comments, and votes.
+Every account uses the password **`password`**.
+
+| Email | Role |
+| --- | --- |
+| `alice@example.com` | member |
+| `citra@example.com` | member |
+| `budi@example.com` | doctor |
+
+## Localization
+
+UI strings live in `lang/{en,id,jp}/messages.php`. The active locale is stored in
+the session and applied by `App\Http\Middleware\LocalizationMiddleware`.
+
+## Optional integrations
+
+Image uploads and translation are disabled cleanly when their credentials are
+blank. To enable them, fill in the `AZURE_STORAGE_*` and `AZURE_TRANSLATOR_*`
+values in `.env`.
+
+## Roadmap
+
+- [ ] Doctor certificates are uploaded but auto-approved — add an admin review step
+- [ ] No admin / moderation role yet
+- [ ] Image uploads are hard-wired to Azure — add a local `public` disk fallback
+- [ ] The Azure Translator key is currently exposed to the browser — move
+      translation behind a server-side endpoint
+- [ ] Feature tests only cover the Breeze scaffolding, not threads/comments/votes
+- [ ] Rate limiting on posting and voting
+- [ ] Retire the vendored `public/bootstrap-icons-1.11.3/` copy in favour of the npm package
+- [ ] Consolidate on Bootstrap (the Breeze `dashboard` view still uses Tailwind)
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT.
