@@ -21,6 +21,13 @@ php artisan storage:link || true
 # Run database migrations. Requires DB_* env vars to point at a real database.
 php artisan migrate --force
 
+# Optional one-off demo seeding: set SEED_ON_DEPLOY=true on the host, deploy
+# once, then remove it. Failures (e.g. re-seeding) are ignored on purpose.
+if [ "${SEED_ON_DEPLOY}" = "true" ]; then
+    echo "==> Seeding demo data (SEED_ON_DEPLOY=true)"
+    php artisan db:seed --force || echo "   seeding skipped or already done"
+fi
+
 # Cache configuration now that all env vars are available.
 php artisan config:cache
 php artisan route:cache
