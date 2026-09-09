@@ -6,9 +6,13 @@ PORT="${PORT:-8000}"
 
 echo "==> Preparing Laravel"
 
-# Generate an app key only if one was not supplied via the environment.
+# APP_KEY must be supplied as an environment variable and stay stable across
+# deploys (a changing key invalidates all sessions and encrypted data).
 if [ -z "${APP_KEY}" ]; then
-    php artisan key:generate --force
+    echo "ERROR: APP_KEY is not set." >&2
+    echo "Generate one locally with:  php artisan key:generate --show" >&2
+    echo "then add it to the host's environment variables." >&2
+    exit 1
 fi
 
 # Link storage for public file access (ignore if it already exists).
