@@ -1,8 +1,36 @@
-# Ignore node modules
+# Dependencies (reinstalled inside the image)
 node_modules
-
-# Ignore vendor directory
 vendor
 
-# Ignore Git repository directories and files
+# VCS
 .git
+.gitignore
+.gitattributes
+
+# Local environment & secrets — provide these as env vars on the host
+.env
+.env.*
+!.env.example
+
+# Local database & build output
+database/*.sqlite
+database/*.sqlite-journal
+public/build
+public/hot
+public/storage
+
+# Logs & caches
+storage/logs/*.log
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*.php
+bootstrap/cache/*.php
+
+# Editor / OS
+.idea
+.vscode
+.fleet
+.DS_Store
+
+# Docs
+README.md

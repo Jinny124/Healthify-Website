@@ -111,6 +111,38 @@ Every account uses the password **`password`**.
 UI strings live in `lang/{en,id,jp}/messages.php`. The active locale is stored in
 the session and applied by `App\Http\Middleware\LocalizationMiddleware`.
 
+## Deployment
+
+The repo ships a production `Dockerfile` and `docker-entrypoint.sh`. The image
+builds PHP + Node, compiles assets, and on start runs `migrate --force`, caches
+config/routes/views, and serves on `$PORT` (default `8000`).
+
+### Locally with Docker Compose
+
+`docker-compose.yml` brings up the app plus a MySQL 8 container:
+
+```bash
+echo "APP_KEY=$(php artisan key:generate --show)" > .env.docker
+docker compose --env-file .env.docker up --build
+```
+
+### On a PaaS (Railway / Render / Fly.io)
+
+Point the platform at the `Dockerfile` and set these environment variables
+(do **not** commit them):
+
+| Variable | Value |
+| --- | --- |
+| `APP_KEY` | `base64:...` from `php artisan key:generate --show` |
+| `APP_ENV` | `production` |
+| `APP_DEBUG` | `false` |
+| `APP_URL` | your public URL |
+| `DB_CONNECTION` | `mysql` |
+| `DB_HOST` / `DB_PORT` / `DB_DATABASE` / `DB_USERNAME` / `DB_PASSWORD` | from the managed database |
+| `SESSION_DRIVER` / `CACHE_STORE` / `QUEUE_CONNECTION` | `database` |
+
+Vercel is **not** supported — it has no persistent PHP runtime or filesystem.
+
 ## Optional integrations
 
 Image uploads and translation are disabled cleanly when their credentials are
