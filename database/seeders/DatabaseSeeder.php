@@ -7,6 +7,7 @@ use App\Models\Thread;
 use App\Models\Upvote;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,6 +17,13 @@ class DatabaseSeeder extends Seeder
      * All accounts use the password: "password".
      */
     public function run(): void
+    {
+        // Wrapped so a failure rolls back cleanly instead of leaving the
+        // database half-populated (which db:seed cannot recover from).
+        DB::transaction(fn () => $this->seed());
+    }
+
+    private function seed(): void
     {
         // --- Known demo accounts -------------------------------------------------
         $alice = User::factory()->create([

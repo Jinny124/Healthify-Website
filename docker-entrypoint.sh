@@ -19,12 +19,17 @@ fi
 php artisan storage:link || true
 
 # Database. Requires DB_* env vars to point at a real database.
-#   SEED_ON_DEPLOY=true  -> DROP everything and rebuild with demo data.
+#   SEED_ON_DEPLOY=true  -> DROP everything, re-migrate, load demo data.
 #                           Use once on a throwaway/demo database, then unset it.
 #   otherwise            -> apply pending migrations only, keep data.
+#
+# Seeding is deliberately non-fatal: if it fails the site still boots with an
+# empty database and the error trace stays in the logs.
 if [ "${SEED_ON_DEPLOY}" = "true" ]; then
-    echo "==> Resetting database to demo state (SEED_ON_DEPLOY=true)"
-    php artisan migrate:fresh --seed --force
+    echo "==> Resetting schema (SEED_ON_DEPLOY=true)"
+    php artisan migrate:fresh --force
+    echo "==> Loading demo data"
+    php artisan db:seed --force || echo "!! SEED FAILED (trace above) - continuing with an empty database"
 else
     php artisan migrate --force
 fi
