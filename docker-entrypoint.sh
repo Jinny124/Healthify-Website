@@ -18,14 +18,15 @@ fi
 # Link storage for public file access (ignore if it already exists).
 php artisan storage:link || true
 
-# Run database migrations. Requires DB_* env vars to point at a real database.
-php artisan migrate --force
-
-# Optional one-off demo seeding: set SEED_ON_DEPLOY=true on the host, deploy
-# once, then remove it. Failures (e.g. re-seeding) are ignored on purpose.
+# Database. Requires DB_* env vars to point at a real database.
+#   SEED_ON_DEPLOY=true  -> DROP everything and rebuild with demo data.
+#                           Use once on a throwaway/demo database, then unset it.
+#   otherwise            -> apply pending migrations only, keep data.
 if [ "${SEED_ON_DEPLOY}" = "true" ]; then
-    echo "==> Seeding demo data (SEED_ON_DEPLOY=true)"
-    php artisan db:seed --force || echo "   seeding skipped or already done"
+    echo "==> Resetting database to demo state (SEED_ON_DEPLOY=true)"
+    php artisan migrate:fresh --seed --force
+else
+    php artisan migrate --force
 fi
 
 # Cache configuration now that all env vars are available.

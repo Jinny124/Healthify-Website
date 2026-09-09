@@ -142,10 +142,11 @@ class DatabaseSeeder extends Seeder
                     'body' => $body,
                 ]);
 
-                // Occasionally add a reply to this comment.
+                // Occasionally add a reply to this comment. Replies carry only
+                // parent_comment_id (thread_id null), matching CommentController.
                 if (random_int(0, 2) === 0) {
                     Comment::create([
-                        'thread_id' => $thread->id,
+                        'thread_id' => null,
                         'user_id' => $everyone->random()->id,
                         'parent_comment_id' => $comment->id,
                         'body' => $replies[array_rand($replies)],
