@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Thread;
-use App\Models\User;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ThreadController extends Controller
 {
-
-
     public function create(Request $request)
     {
 
@@ -28,7 +25,6 @@ class ThreadController extends Controller
         return redirect()->route('threads.search')->with('message', 'Thread deleted successfully!');
     }
 
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -39,11 +35,15 @@ class ThreadController extends Controller
 
         $imageUrl = null;
         if ($request->hasFile('threads_image')) {
-            $path = $request->file('threads_image')->store(
-                'threads',
-                'azure'
-            );
-            $imageUrl = config('filesystems.disks.azure.url') . '/' . $path;
+            // Use Azure when it is configured, otherwise fall back to the
+            // local public disk so uploads work without cloud credentials.
+            $disk = config('filesystems.disks.azure.key') ? 'azure' : 'public';
+
+            $path = $request->file('threads_image')->store('threads', $disk);
+
+            $imageUrl = $disk === 'azure'
+                ? config('filesystems.disks.azure.url').'/'.$path
+                : Storage::disk('public')->url($path);
         }
 
         $thread = Thread::create([
@@ -83,8 +83,8 @@ class ThreadController extends Controller
                 ->appends(['filter' => $filter]);
         } elseif ($filter === 'search') {
             $searchTerm = $request->query('search', '');
-            $threads = Thread::where('title', 'like', '%' . $searchTerm . '%')
-                ->orWhere('body', 'like', '%' . $searchTerm . '%')
+            $threads = Thread::where('title', 'like', '%'.$searchTerm.'%')
+                ->orWhere('body', 'like', '%'.$searchTerm.'%')
                 ->paginate(5)
                 ->appends(['filter' => $filter, 'search' => $searchTerm]);
         } else {
@@ -96,7 +96,4 @@ class ThreadController extends Controller
 
         return view('threads.thread.index', compact('threads'));
     }
-
-
 }
-
