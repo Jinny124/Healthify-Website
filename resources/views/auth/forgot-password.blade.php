@@ -15,7 +15,7 @@
 </head>
 
 <body class="container d-flex justify-content-center align-items-center bg-primary" style="min-height: 100vh;">
-    <div class="border p-5 d bg-white rounded shadow" style="max-width: 25vw">
+    <div class="border p-4 p-sm-5 bg-white rounded shadow auth-card">
         <div class="d-flex justify-content-center mb-2">
             <i class="bi bi-person-raised-hand text-primary fs-1"></i>
         </div>

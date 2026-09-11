@@ -18,18 +18,18 @@
 
     @include('layouts.navigation')
 
+    @include('layouts.sidebar')
+
     <div class="d-flex" id="wrapper">
 
-        <div class="" id="sidebar-wrapper" style="width: 400px;">
-            @include('layouts.sidebar')
-        </div>
+        {{-- Holds the width of the fixed sidebar on large screens; collapses to
+             zero below `lg`, where the sidebar becomes an off-canvas drawer. --}}
+        <div id="sidebar-spacer"></div>
 
-        <div id="page-content-wrapper" class="container-fluid " style="margin-top: 70px;">
+        <div id="page-content-wrapper" class="container-fluid">
             @yield('content')
         </div>
     </div>
 </body>
 
-    
-</script>
 </html>

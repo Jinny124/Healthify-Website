@@ -16,7 +16,7 @@
 </head>
 
 <body class="container d-flex justify-content-center align-items-center bg-primary" style="min-height: 100vh;">
-    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data" class="border p-5 d bg-white rounded shadow" style="min-width: 20vw">
+    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data" class="border p-4 p-sm-5 bg-white rounded shadow auth-card">
         @csrf
         <div class="d-flex justify-content-center mb-2">
             <i class="bi bi-capsule text-primary fs-1"></i>

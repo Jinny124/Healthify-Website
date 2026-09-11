@@ -1,0 +1,113 @@
+/* ---------------------------------------------------------------------------
+   Healthify layout
+   The navbar is fixed to the top and the sidebar sits below it. On screens
+   narrower than the `lg` breakpoint the sidebar turns into an off-canvas
+   drawer (see layouts/sidebar.blade.php) and the content takes the full width.
+   --------------------------------------------------------------------------- */
+
+:root {
+    --app-navbar-height: 64px;
+    --app-sidebar-width: 260px;
+}
+
+/* Offsets the fixed navbar. Scoped to the app layout so the standalone auth
+   pages (which have no navbar) are unaffected. */
+#wrapper {
+    margin-top: var(--app-navbar-height);
+}
+
+/* --- Sidebar ------------------------------------------------------------ */
+
+.app-sidebar {
+    --bs-offcanvas-width: var(--app-sidebar-width);
+}
+
+@media (min-width: 992px) {
+    .app-sidebar {
+        position: fixed;
+        top: var(--app-navbar-height);
+        bottom: 0;
+        width: var(--app-sidebar-width);
+    }
+
+    /* Bootstrap resets a responsive off-canvas body to flex-grow:0 above its
+       breakpoint; restore it so the bottom links stay pinned to the bottom. */
+    .app-sidebar .offcanvas-body {
+        flex-grow: 1;
+    }
+}
+
+/* Reserves the space the fixed sidebar occupies on large screens only. */
+#sidebar-spacer {
+    flex: 0 0 0;
+}
+
+@media (min-width: 992px) {
+    #sidebar-spacer {
+        flex: 0 0 var(--app-sidebar-width);
+    }
+}
+
+/* --- Content ------------------------------------------------------------ */
+
+#page-content-wrapper {
+    /* min-width:0 lets long words and wide tables shrink instead of
+       overflowing the flex row. */
+    min-width: 0;
+    width: 100%;
+}
+
+/* Wide children (tables, code, pre) scroll on their own instead of pushing
+   the page sideways. */
+#page-content-wrapper table {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+/* --- Media -------------------------------------------------------------- */
+
+.thread-image {
+    max-width: min(320px, 100%);
+    height: auto;
+}
+
+@media (max-width: 575.98px) {
+    .thread-image {
+        max-width: 100%;
+    }
+}
+
+/* Long titles and pasted URLs must not widen the page. */
+.thread-title,
+.thread-body,
+.comment-body {
+    overflow-wrap: anywhere;
+}
+
+/* --- Auth cards --------------------------------------------------------- */
+
+/* Fills the width on a phone, settles at a comfortable column on desktop. */
+.auth-card {
+    width: 100%;
+    max-width: 26rem;
+}
+
+/* --- Custom scrollbar --------------------------------------------------- */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0077b6;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00b4d8;
+}

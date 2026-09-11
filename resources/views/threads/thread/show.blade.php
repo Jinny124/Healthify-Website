@@ -20,7 +20,7 @@
                     @endif
                 </div>
                 @if($thread->threads_image)
-                <img class="rounded img-fluid my-2" src="{{ $thread->threads_image }}" alt="Thread Image" style="max-width: 20vw; height: auto;">
+                <img class="rounded img-fluid my-2 thread-image" src="{{ $thread->threads_image }}" alt="Thread Image">
                 @endif
             </div>
             @include('threads.vote.vote', ['object' => $thread, 'type' => 'thread'])
