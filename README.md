@@ -1,20 +1,38 @@
 # Healthify
 
-A health discussion forum where people ask everyday health questions and get
-answers from the community — including verified doctors. Built with Laravel 11.
+> A health discussion forum where people ask everyday questions and get answers
+> from the community — including doctors whose credentials an admin has approved.
+
+![Healthify walkthrough](docs/demo.gif)
 
 Members post threads, reply with nested comments, and up/down-vote both threads
-and comments. Any post can be machine-translated in place, and the whole UI is
-available in English, Indonesian, and Japanese.
+and comments. Registering as a doctor puts you in a review queue — the "Doctor"
+badge only appears after an admin approves your certificate. The whole UI ships
+in English, Indonesian, and Japanese.
 
-> Started as a university web-programming project and is being cleaned up into a
-> portfolio piece. See [Roadmap](#roadmap) for what is still in progress.
+Built with **Laravel 11**, Blade and Bootstrap 5. **60 feature tests**,
+responsive from 320px, and a production `Dockerfile` that migrates and boots on
+its own.
 
-## Screenshots
+**Run it yourself in four commands** — SQLite by default, no services to set up:
 
-| Thread list | Thread detail |
-| --- | --- |
-| _add `docs/threads.png`_ | _add `docs/thread-detail.png`_ |
+```bash
+composer install && npm install && npm run build
+cp .env.example .env && php artisan key:generate
+touch database/database.sqlite && php artisan migrate --seed
+php artisan serve
+```
+
+Then sign in as `admin@example.com` / `password` to see the verification panel.
+
+<details>
+<summary>More screenshots</summary>
+
+| Thread detail | Admin verification queue | Mobile |
+| --- | --- | --- |
+| ![Thread detail](docs/thread-detail.png) | ![Admin panel](docs/admin.png) | ![Mobile](docs/mobile.png) |
+
+</details>
 
 ## Features
 
@@ -158,9 +176,9 @@ persistent volume mounted at:
 /var/www/html/storage/app/public
 ```
 
-On Railway: open the service → **Variables → Volumes → Add Volume** and set that
-mount path. Without it, image records survive in the database but the files
-themselves disappear on the next deploy.
+On Railway: right-click the service on the canvas → **Attach Volume** (or
+**Settings → Volumes**) and set that mount path. Without it, image records
+survive in the database but the files themselves disappear on the next deploy.
 
 ## Optional integrations
 
