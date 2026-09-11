@@ -10,22 +10,23 @@ test('the layout ships a viewport meta tag', function () {
         ->assertSee('width=device-width', escape: false);
 });
 
-test('the sidebar is an off-canvas drawer below the lg breakpoint', function () {
+test('the sidebar rail is hidden below the lg breakpoint', function () {
     $this->get('/')
         ->assertOk()
-        ->assertSee('offcanvas-lg offcanvas-start', escape: false)
-        ->assertSee('id="sidebarOffcanvas"', escape: false);
+        ->assertSee('app-sidebar d-none d-lg-flex', escape: false);
 });
 
-test('the navbar exposes toggles for the sidebar and its own menu', function () {
-    $response = $this->get('/')->assertOk();
+test('there is a single navbar toggle and it carries the sidebar links', function () {
+    $html = $this->get('/')->assertOk()->getContent();
 
-    // Hamburger that opens the sidebar drawer.
-    $response->assertSee('data-bs-target="#sidebarOffcanvas"', escape: false);
+    // Exactly one hamburger, and it drives the navbar collapse.
+    expect(substr_count($html, '<button class="navbar-toggler'))->toBe(1);
+    expect($html)->toContain('data-bs-target="#mainNavbar"')
+        ->and($html)->toContain('navbar-expand-lg')
+        ->and($html)->not->toContain('offcanvas');
 
-    // Collapsing navbar for search / language / auth controls.
-    $response->assertSee('navbar-expand-lg', escape: false)
-        ->assertSee('id="mainNavbar"', escape: false);
+    // The sidebar destinations are reachable from that menu on small screens.
+    expect($html)->toContain('navbar-nav d-lg-none');
 });
 
 test('the layout does not hard-code pixel or viewport widths', function () {

@@ -23,7 +23,7 @@
     <div class="d-flex" id="wrapper">
 
         {{-- Holds the width of the fixed sidebar on large screens; collapses to
-             zero below `lg`, where the sidebar becomes an off-canvas drawer. --}}
+             zero below `lg`, where the sidebar is replaced by the navbar menu. --}}
         <div id="sidebar-spacer"></div>
 
         <div id="page-content-wrapper" class="container-fluid">

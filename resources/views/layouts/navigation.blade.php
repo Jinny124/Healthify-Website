@@ -9,12 +9,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top py-2">
   <div class="container-fluid">
 
-    {{-- Opens the sidebar drawer; only shown while the sidebar is off-canvas. --}}
-    <button class="btn btn-link text-white px-2 d-lg-none" type="button" data-bs-toggle="offcanvas"
-      data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas" aria-label="@lang('messages.home')">
-      <i class="bi bi-list fs-3"></i>
-    </button>
-
     <a class="navbar-brand d-flex align-items-center fw-bold me-0 me-lg-3" href="{{ route('threads.search') }}">
       <i class="bi bi-bandaid-fill text-primary fs-3 me-2"></i>Healthify
     </a>
@@ -35,6 +29,31 @@
           <i class="bi bi-search fw-bold"></i>
         </button>
       </form>
+
+      {{-- Below `lg` the sidebar is hidden, so its links live here instead. --}}
+      <ul class="navbar-nav d-lg-none border-top border-secondary pt-2 mb-2">
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" href="{{ route('threads.search') }}">
+            <i class="bi bi-house-fill text-primary me-2 fs-5"></i>@lang('messages.home')
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center"
+            href="{{ route('threads.search', ['filter' => 'popular']) }}">
+            <i class="bi bi-fire text-primary me-2 fs-5"></i>@lang('messages.popular')
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" href="{{ route('aboutus') }}">
+            <i class="bi bi-info-circle text-primary me-2 fs-5"></i>@lang('messages.about_us')
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" href="{{ route('help') }}">
+            <i class="bi bi-question-circle text-primary me-2 fs-5"></i>@lang('messages.help')
+          </a>
+        </li>
+      </ul>
 
       <div class="d-flex align-items-center flex-wrap gap-2 pb-2 pb-lg-0">
 

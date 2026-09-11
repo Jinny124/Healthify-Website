@@ -18,22 +18,13 @@
 
 /* --- Sidebar ------------------------------------------------------------ */
 
-.app-sidebar {
-    --bs-offcanvas-width: var(--app-sidebar-width);
-}
-
+/* Only rendered from `lg` up; below that the navbar menu carries the links. */
 @media (min-width: 992px) {
     .app-sidebar {
         position: fixed;
         top: var(--app-navbar-height);
         bottom: 0;
         width: var(--app-sidebar-width);
-    }
-
-    /* Bootstrap resets a responsive off-canvas body to flex-grow:0 above its
-       breakpoint; restore it so the bottom links stay pinned to the bottom. */
-    .app-sidebar .offcanvas-body {
-        flex-grow: 1;
     }
 }
 
