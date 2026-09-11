@@ -13,6 +13,41 @@ test('anyone can view the thread list', function () {
         ->assertSee('Public thread');
 });
 
+test('the translate link is hidden when no translator key is configured', function () {
+    config(['services.azure_translator.key' => null]);
+    $thread = Thread::factory()->for(User::factory())->create();
+
+    $this->get(route('threads.thread.show', $thread))
+        ->assertOk()
+        ->assertDontSee('translateThreadBody');
+});
+
+test('the translate link shows when a translator key is configured', function () {
+    config(['services.azure_translator.key' => 'test-key']);
+    $thread = Thread::factory()->for(User::factory())->create();
+
+    $this->get(route('threads.thread.show', $thread))
+        ->assertOk()
+        ->assertSee('translateThreadBody', escape: false);
+});
+
+test('the comment form is not sent to guests', function () {
+    $thread = Thread::factory()->for(User::factory())->create();
+
+    $this->get(route('threads.thread.show', $thread))
+        ->assertOk()
+        ->assertDontSee('Post Comment');
+});
+
+test('the comment form is sent to signed-in users', function () {
+    $thread = Thread::factory()->for(User::factory())->create();
+
+    $this->actingAs(User::factory()->create())
+        ->get(route('threads.thread.show', $thread))
+        ->assertOk()
+        ->assertSee('Post Comment');
+});
+
 test('a guest cannot open the thread create page', function () {
     $this->get(route('threads.thread.create'))
         ->assertRedirect(route('login'));

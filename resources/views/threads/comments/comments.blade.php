@@ -7,9 +7,11 @@
         <p class="my-3" id="comment-body-{{ $comment->id }}" data-full-content="{{ $comment->body }}">
             {{ $comment->body }}
         </p>
+        @if (config('services.azure_translator.key'))
         <a href="javascript:void(0)" id="translate-comment-link-{{ $comment->id }}" onclick="translateComment({{ $comment->id }})" class="text-primary">
             @lang('messages.translate')
         </a>
+        @endif
         @include('threads.vote.vote', ['object' => $comment, 'type' => 'comment'])
         
         @if ($comment->childComments->isNotEmpty())
@@ -26,6 +28,7 @@
     
 </ul>
 
+@if (config('services.azure_translator.key'))
 <script>
 async function translateComment(commentId) {
     event.stopPropagation();
@@ -101,3 +104,4 @@ async function translateComment(commentId) {
     }
 }
 </script>
+@endif

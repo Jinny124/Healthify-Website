@@ -13,9 +13,11 @@
                         {{ ($thread->title) }}
                     </h1>
                     <p id="thread-body-{{ $thread->id }}" data-full-content="{{ $thread->body }}">{{ $thread->body }}</p>
+                    @if (config('services.azure_translator.key'))
                     <a href="javascript:void(0)" id="translate-link-{{ $thread->id }}" onclick="translateThreadBody({{ $thread->id }})" class="text-primary">
                         @lang('messages.translate')
                     </a>
+                    @endif
                 </div>
                 @if($thread->threads_image)
                 <img class="rounded img-fluid my-2" src="{{ $thread->threads_image }}" alt="Thread Image" style="max-width: 20vw; height: auto;">
@@ -32,6 +34,7 @@
 
 </div>
 
+@if (config('services.azure_translator.key'))
 <script>
 async function translateThreadBody(threadId) {
     event.stopPropagation();
@@ -117,6 +120,7 @@ async function translateThreadBody(threadId) {
     }
 }
 </script>
+@endif
 
 
 @endsection

@@ -57,6 +57,9 @@
         @endif
     </div>
  
+    {{-- The toggle above is only rendered for signed-in users, so the form
+         itself should not be sent to guests either. --}}
+    @auth
     <div class="collapse " id="collapseComment-{{$object->id}}">
 
         @if ($object instanceof App\Models\Thread)
@@ -79,5 +82,6 @@
         </form>
         @endif
     </div>
-  
+    @endauth
+
 </div>
