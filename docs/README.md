@@ -1,55 +1,44 @@
 # Media for the project README
 
-Capture these from a locally running instance (`php artisan serve`) seeded with
-`--seed`, signed in as `admin@example.com` / `password`.
+`demo.gif` is the walkthrough shown at the top of the project README.
 
-| What | Where it lives | Size |
-| --- | --- | --- |
-| Walkthrough video | Uploaded to GitHub, linked from `README.md` — see below | 15–25s |
-| `thread-detail.png` | This folder | ~1280px wide |
-| `admin.png` | This folder | ~1280px wide |
-| `mobile.png` | This folder | ~375px wide |
+## Re-recording it
 
-`thread-detail.png` shows a thread with comments and a nested reply, `admin.png`
-shows `/admin/doctor-verifications` with pending and approved rows, and
-`mobile.png` shows the feed at a 375px viewport with the navbar menu open.
+Run the app locally (`php artisan serve`) against a database seeded with
+`--seed`, and sign in as `admin@example.com` / `password`. Put the text you plan
+to type on the clipboard first — typing on camera eats a lot of seconds.
 
-## Hosting the video
+Record the browser in fullscreen (F11) so no tabs or taskbar end up in frame.
+On Windows, `Win + Alt + R` starts and stops a Game Bar capture without opening
+the overlay. Note that Game Bar records a single window, so it stops if a file
+picker opens — upload any images before you start rolling.
 
-GitHub plays videos inline in a README, which looks better than a GIF and keeps
-the file out of the repository:
+A run worth capturing, roughly 30–40 seconds:
 
-1. Record the walkthrough to `.mp4` (Win + G on Windows).
-2. Open a **new issue** on the repository — do not submit it.
-3. Drag the `.mp4` into the comment box and wait for the upload to finish.
-4. Copy the `https://github.com/user-attachments/assets/…` URL it inserts.
-5. Put that URL on its own line in `README.md`; discard the draft issue.
+1. The feed, with a thread that has an image
+2. Open a seeded thread — it has comments and a nested reply
+3. Upvote it; the count changes
+4. **Create** a thread, paste the title, submit
+5. Switch the language from the navbar
+6. Profile menu → **Doctor verifications** → **Approve** a pending doctor
 
-## demo.gif script
+## Turning the recording into the GIF
 
-Keep it short and let each step breathe for about a second. Signed in as
-`admin@example.com`, with any photo ready on disk for step 2.
+Trim to the parts worth keeping, then convert. Adjust the `trim` ranges to match
+your own take:
 
-1. Land on the feed — scroll one or two threads into view
-2. **Create** → fill a title and body, attach a picture → submit; the new thread
-   opens with its image
-3. Back to the feed — the new thread sits on top
-4. Open *"Berapa lama waktu tidur ideal untuk orang dewasa?"* — it has comments
-   and a nested reply
-5. Upvote it — the count changes
-6. Switch the language to Bahasa Indonesia from the navbar
-7. Profile menu → **Doctor verifications** → **Approve** a pending doctor; the
-   row moves down to *Approved*
+```bash
+ffmpeg -i capture.mp4 -filter_complex "\
+[0:v]trim=0:6,setpts=PTS-STARTPTS[a];\
+[0:v]trim=23:31.5,setpts=PTS-STARTPTS[b];\
+[a][b]concat=n=2:v=1:a=0,fps=30,scale=1280:-2:flags=lanczos[v]" \
+  -map "[v]" -an -c:v libx264 -preset slow -crf 24 -pix_fmt yuv420p cut.mp4
 
-## Recording
+ffmpeg -i cut.mp4 -vf "fps=12,scale=960:-1:flags=lanczos,palettegen=max_colors=128:stats_mode=diff" palette.png
+ffmpeg -i cut.mp4 -i palette.png -lavfi \
+  "fps=12,scale=960:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=3:diff_mode=rectangle" \
+  -loop 0 demo.gif
+```
 
-- **Windows:** ScreenToGif (free) records straight to `.gif` and lets you trim
-  frames and cap the width.
-- **Cross-platform:** record `.mp4` with OBS, then convert:
-
-  ```bash
-  ffmpeg -i demo.mp4 -vf "fps=12,scale=1200:-1:flags=lanczos" -loop 0 demo.gif
-  ```
-
-Keep the GIF under ~8 MB — GitHub serves larger files slowly and some readers
-will never see it finish loading.
+Screen recordings are mostly static frames, so this lands around 1 MB for half a
+minute. Keep it under a few megabytes — GitHub serves larger files slowly.

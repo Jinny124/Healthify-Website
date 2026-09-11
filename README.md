@@ -25,15 +25,6 @@ php artisan serve
 
 Then sign in as `admin@example.com` / `password` to see the verification panel.
 
-<details>
-<summary>More screenshots</summary>
-
-| Thread detail | Admin verification queue | Mobile |
-| --- | --- | --- |
-| ![Thread detail](docs/thread-detail.png) | ![Admin panel](docs/admin.png) | ![Mobile](docs/mobile.png) |
-
-</details>
-
 ## Features
 
 - **Threads** — create, browse (latest / popular), full-text search, delete your own
