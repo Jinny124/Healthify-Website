@@ -1,15 +1,29 @@
 # Media for the project README
 
-The top-level `README.md` expects four files in this folder. Capture them from a
-locally running instance (`php artisan serve`) seeded with `--seed`, signed in as
-`admin@example.com` / `password`.
+Capture these from a locally running instance (`php artisan serve`) seeded with
+`--seed`, signed in as `admin@example.com` / `password`.
 
-| File | What to capture | Size |
+| What | Where it lives | Size |
 | --- | --- | --- |
-| `demo.gif` | 15–20s walkthrough, see the script below | ≤ 1200px wide, under ~8 MB |
-| `thread-detail.png` | A thread with comments and a nested reply | ~1280px wide |
-| `admin.png` | `/admin/doctor-verifications` with pending + approved rows | ~1280px wide |
-| `mobile.png` | The feed at a 375px viewport, navbar menu open | ~375px wide |
+| Walkthrough video | Uploaded to GitHub, linked from `README.md` — see below | 15–25s |
+| `thread-detail.png` | This folder | ~1280px wide |
+| `admin.png` | This folder | ~1280px wide |
+| `mobile.png` | This folder | ~375px wide |
+
+`thread-detail.png` shows a thread with comments and a nested reply, `admin.png`
+shows `/admin/doctor-verifications` with pending and approved rows, and
+`mobile.png` shows the feed at a 375px viewport with the navbar menu open.
+
+## Hosting the video
+
+GitHub plays videos inline in a README, which looks better than a GIF and keeps
+the file out of the repository:
+
+1. Record the walkthrough to `.mp4` (Win + G on Windows).
+2. Open a **new issue** on the repository — do not submit it.
+3. Drag the `.mp4` into the comment box and wait for the upload to finish.
+4. Copy the `https://github.com/user-attachments/assets/…` URL it inserts.
+5. Put that URL on its own line in `README.md`; discard the draft issue.
 
 ## demo.gif script
 
