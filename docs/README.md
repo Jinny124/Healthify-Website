@@ -13,14 +13,19 @@ locally running instance (`php artisan serve`) seeded with `--seed`, signed in a
 
 ## demo.gif script
 
-Keep it short and let each step breathe for about a second.
+Keep it short and let each step breathe for about a second. Signed in as
+`admin@example.com`, with any photo ready on disk for step 2.
 
 1. Land on the feed — scroll one or two threads into view
-2. Open a thread — show the comments and a nested reply
-3. Vote on the thread (the count changes)
-4. Switch the language to Bahasa Indonesia via the navbar
-5. Open the profile menu → **Doctor verifications**
-6. Approve one pending doctor — the row moves to *Approved*
+2. **Create** → fill a title and body, attach a picture → submit; the new thread
+   opens with its image
+3. Back to the feed — the new thread sits on top
+4. Open *"Berapa lama waktu tidur ideal untuk orang dewasa?"* — it has comments
+   and a nested reply
+5. Upvote it — the count changes
+6. Switch the language to Bahasa Indonesia from the navbar
+7. Profile menu → **Doctor verifications** → **Approve** a pending doctor; the
+   row moves down to *Approved*
 
 ## Recording
 
