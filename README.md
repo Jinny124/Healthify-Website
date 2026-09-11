@@ -148,22 +148,39 @@ Point the platform at the `Dockerfile` and set these environment variables
 
 Vercel is **not** supported — it has no persistent PHP runtime or filesystem.
 
+### Persisting uploads
+
+Container filesystems are wiped on every deploy. Without Azure Blob Storage
+configured, uploads land on the local `public` disk, so that directory needs a
+persistent volume mounted at:
+
+```
+/var/www/html/storage/app/public
+```
+
+On Railway: open the service → **Variables → Volumes → Add Volume** and set that
+mount path. Without it, image records survive in the database but the files
+themselves disappear on the next deploy.
+
 ## Optional integrations
 
-Image uploads and translation are disabled cleanly when their credentials are
-blank. To enable them, fill in the `AZURE_STORAGE_*` and `AZURE_TRANSLATOR_*`
-values in `.env`.
+Translation is hidden entirely when `AZURE_TRANSLATOR_KEY` is blank. Uploads use
+Azure Blob Storage when `AZURE_STORAGE_*` is filled in, and otherwise fall back
+to the local `public` disk (see the volume note above).
 
 ## Roadmap
 
 - [x] Admin review step for doctor applications (`admin` role + verification panel)
 - [x] Feature tests for threads, comments, votes, and the verification flow
 - [x] Auth guard on write routes (create/delete threads, comment, vote)
+- [x] Uploads (thread images, avatars, certificates) fall back to the local
+      `public` disk when Azure is not configured
+- [x] Responsive layout down to 320px (off-canvas sidebar, collapsing navbar)
+- [x] Translate UI is hidden — and its API key no longer emitted — when
+      `AZURE_TRANSLATOR_KEY` is unset
 - [ ] Broader moderation: hide/lock threads, ban users, report queue
-- [ ] Thread and profile image uploads are still hard-wired to Azure — only the
-      doctor certificate falls back to the local `public` disk
-- [ ] The Azure Translator key is currently exposed to the browser — move
-      translation behind a server-side endpoint
+- [ ] Move translation behind a server-side endpoint so the key is never sent
+      to the browser even when it is configured
 - [ ] Rate limiting on posting and voting
 - [ ] Retire the vendored `public/bootstrap-icons-1.11.3/` copy in favour of the npm package
 - [ ] Consolidate on Bootstrap (the Breeze `dashboard` view still uses Tailwind)
